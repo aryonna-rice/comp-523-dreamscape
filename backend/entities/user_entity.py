@@ -1,11 +1,12 @@
 """User accounts for registered users"""
 
 from sqlalchemy import Integer, String
-from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from sqlalchemy.orm import Mapped, mapped_column
+from .entity_base import EntityBase
 from typing import Self
 from ..models import User
 
-class UserEntity(DeclarativeBase):
+class UserEntity(EntityBase):
     __tablename__ = "user"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
