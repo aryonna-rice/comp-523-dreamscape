@@ -20,7 +20,7 @@ class UserEntity(EntityBase):
             id = model.id,
             first_name = model.first_name,
             last_name = model.last_name,
-            device_id = model.last_name,
+            device_id = model.device_id,
         )
     
     def to_model(self) -> User:

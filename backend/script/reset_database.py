@@ -16,5 +16,4 @@ with Session(engine) as session:
     from .dev_data import users
     to_entity = entities.UserEntity.from_model
     session.add_all([to_entity(model) for model in users.models])
-    session.execute(text(f'ALTER SEQUENCE {entities.UserEntity.__table__}_id_seq RESTART WITH {len(users.models) + 1}'))
     session.commit()
