@@ -13,8 +13,8 @@ def get(device_id: int, user_svc: UserService = Depends()):
 
 @api.post("", response_model=User | None, tags=['User'])
 def register(user: User, user_svc: UserService = Depends()):
-    return user_svc.save(user)
+    return user_svc.add(user)
 
 @api.put("", response_model=User | None, tags=['User'])
 def update(user: User, user_svc: UserService = Depends()):
-    return user_svc.save(user)
+    return user_svc.update(user)

@@ -21,13 +21,16 @@ class UserService:
             model = user_entity.to_model()
             return model
         
-    def save(self, user: User) -> User | None:
-        '''Function used to both add to the database and update database'''
-        if user.id:
-            entity = self._session.get(UserEntity, user.id)
-            entity.update(user)
-        else:
-            entity = UserEntity.from_model(user)
-            self._session.add(entity)
+    def add(self, user: User) -> User | None:
+        '''Function used to add to the database'''
+        entity = UserEntity.from_model(user)
+        self._session.add(entity)
+        self._session.commit()
+        return entity.to_model()
+    
+    def update(self, user: User) -> User | None:
+        '''Function to update the database'''
+        entity = self._session.get(UserEntity, user.id)
+        entity.update(user)
         self._session.commit()
         return entity.to_model()
