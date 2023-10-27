@@ -1,16 +1,15 @@
 import { setStatusBarHidden, StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Header as HeaderRNE, HeaderProps, Icon } from '@rneui/themed';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {Dimensions} from 'react-native';
-import { Image, Input, Button, ButtonGroup } from '@rneui/themed';
+import { Image, Input, Button, ButtonGroup, Text} from '@rneui/themed';
 import React, { useState } from 'react';
-
+import { SearchOutlined } from '@ant-design/icons';
 
 const logo = require('./assets/logo.png')
 const windowWidth = Dimensions.get('window').width;
 const screenWidth = Dimensions.get('screen').width;
-
 
 export default function App() {
   const [firstName, setFirstName] = useState('');
@@ -108,6 +107,14 @@ export default function App() {
         />
         <Button type="submit" style={styles.submit} title="Submit" titleStyle={{ color: 'white'}} onPress={handleSubmit}></Button>
       </form>
+      <form style={styles.form}>
+        <Text style={styles.header2}>Find a Patient</Text>
+        <Input
+          style={styles.input}  
+          placeholder="Last Name"
+        />
+        <Button type="submit" style={styles.search} onPress={handleSubmit}><SearchOutlined /></Button>
+      </form>
       </SafeAreaProvider>
       <StatusBar style="auto" />
       
@@ -141,11 +148,14 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     margin: 10,
   },
+  search: {
+    backgroundColor: '#5A6BFF',
+    color: '#FFFFFF',
+    width: 40,
+  },
   container: {
-    flex: 1,
     backgroundColor: '#19173D',
-    alignItems: 'center',
-    justifyContent: 'center',
+    fontFamily: 'Poppins',
   },
   headerContainer: {
     backgroundColor: '#19173D',
@@ -169,15 +179,18 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 24,
     fontWeight: 'bold',
+    fontFamily: 'Poppins',
   },
   header2: {
     color: '#5A6BFF',
     fontSize: 24,
+    fontFamily: 'Poppins',
   },
   paragraph: {
     color: '#FFFFFF',
     fontSize: 16,
     padding: 10,
+    fontFamily: 'Poppins',
   },
   logo: {
     width: 100,
