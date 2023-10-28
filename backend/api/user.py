@@ -12,7 +12,7 @@ def get(device_id: int, user_svc: UserService = Depends()):
     return user_svc.get(device_id)
 
 @api.get("/list", response_model=list[User], tags=['User'])
-def list(user_svc: UserService = Depends()):
+def list_users(user_svc: UserService = Depends()):
     return user_svc.list_users()
 
 @api.get("/search", response_model=list[User], tags=['User'])
