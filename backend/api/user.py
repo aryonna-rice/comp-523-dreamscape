@@ -11,6 +11,14 @@ api = APIRouter(prefix="/api/user")
 def get(device_id: int, user_svc: UserService = Depends()):
     return user_svc.get(device_id)
 
+@api.get("/list", response_model=list[User], tags=['User'])
+def list(user_svc: UserService = Depends()):
+    return user_svc.list_users()
+
+@api.get("/search", response_model=list[User], tags=['User'])
+def search(first_name: str | None = None, last_name: str | None = None, user_svc: UserService = Depends()):
+    return user_svc.search_name(first_name, last_name)
+
 @api.post("", response_model=User | None, tags=['User'])
 def register(user: User, user_svc: UserService = Depends()):
     return user_svc.add(user)
