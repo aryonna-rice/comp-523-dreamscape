@@ -123,7 +123,7 @@ class eeg_pretrain_dataset(Dataset):
     def __getitem__(self, index):
         data_path = self.input_paths[index]
 
-        data = np.load(data_path)
+        data = np.load(data_path, allow_pickle=True)
 
         if data.shape[-1] > self.data_len:
             idx = np.random.randint(0, int(data.shape[-1] - self.data_len)+1)

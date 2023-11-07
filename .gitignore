@@ -1,0 +1,6 @@
+*.JPEG
+*.npy
+__pycache__
+results
+datasets
+pretrains
