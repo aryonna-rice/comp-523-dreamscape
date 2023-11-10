@@ -43,6 +43,7 @@ class UserService:
         entity = UserEntity.from_model(user)
         self._session.add(entity)
         self._session.commit()
+        
         return entity.to_model()
     
     def update(self, user: User) -> User | None:

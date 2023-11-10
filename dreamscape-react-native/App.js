@@ -1,29 +1,82 @@
 import { setStatusBarHidden, StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, FlatList } from 'react-native';
 import { Header as HeaderRNE, HeaderProps, Icon } from '@rneui/themed';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {Dimensions} from 'react-native';
 import { Image, Input, Button, ButtonGroup, Text} from '@rneui/themed';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
+import axios from 'axios';
 
 const logo = require('./assets/logo.png')
 const windowWidth = Dimensions.get('window').width;
 const screenWidth = Dimensions.get('screen').width;
+const baseUrl = 'http://localhost:8000/api';
 
 export default function App() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [dob, setDOB] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [gender, setGender] = useState('');
   const [date, setDate] = useState(new Date())
   const [open, setOpen] = useState(false)
-  const [caregiver, setCaregiver] = useState('')
+
+  const [patients, setPatients] = useState([]);
+  
+    useEffect(() => {
+      const fetchPatients = async () => {
+        try {
+          const response = await axios.get('http://localhost:8000/api/user', {
+            params: {
+              device_id: 2002,
+            },
+          });
+          setPatients([response.data]);
+          console.log(response.data);
+        } catch (error) {
+          console.error('Error fetching patients:', error);
+        }
+      };
+  
+      fetchPatients();
+    }, []);
+  
   const handleSubmit = () => {
-    setFirstName('');
-    setLastName('');
-    setDOB('');
-    setCaregiver('');
+    const patientData = {
+      id : 1010,
+      first_name: firstName,
+      last_name:lastName,
+      device_id: 1010,
+      dob,
+      gender,
+    };
+
+    console.log('Submitting patientData:', patientData);
+
+    axios.post('http://localhost:8000/api/user', patientData)
+    .then(response => {
+      // Handle success (e.g., show a success message, navigate to a new screen)
+      console.log('Patient registered:', response.data);
+    })
+    .catch(error => {
+      // Handle error (e.g., show an error message)
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('Server responded with non-2xx status:', error.response.status);
+        console.error('Response data:', error.response.data);
+        console.error('Response headers:', error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received from the server');
+        console.error('Request data:', error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error setting up the request:', error.message);
+      }
+      console.error('Full error object:', error);
+    });
+  
   };
 
   const formatDOB = (input) => {
@@ -89,21 +142,11 @@ export default function App() {
           value={formatDOB(dob)}
           onChangeText={text => setDOB(formatDOB(text))}
         />
-        <ButtonGroup
-          buttons={['Female', 'Non-Binary', 'Male']}
-          selectedButtonStyle={{backgroundColor: '#5A6BFF'}}
-          textStyle={{color: '#FFFFFF'}}
-          selectedIndex={selectedIndex}
-          onPress={(value) => {
-            setSelectedIndex(value);
-          }}
-          containerStyle={styles.buttonContainer}
-        />
         <Input 
           style={styles.input}
-          placeholder="Caregiver Name" 
-          value={caregiver}
-          onChangeText={text => setCaregiver(text)}
+          placeholder="Gender"
+          value={gender}
+          onChangeText={text => setGender(text)}
         />
         <Button type="submit" style={styles.submit} title="Submit" titleStyle={{ color: 'white'}} onPress={handleSubmit}></Button>
       </form>
@@ -113,11 +156,18 @@ export default function App() {
           style={styles.input}  
           placeholder="Last Name"
         />
-        <Button type="submit" style={styles.search} onPress={handleSubmit}><SearchOutlined /></Button>
+        <Button type="submit" style={styles.search}><SearchOutlined /></Button>
       </form>
+      <Text style={styles.header2}>List of Patients:</Text>
+      <FlatList
+        data={patients}
+        keyExtractor={(item) => item.device_id}
+        renderItem={({ item }) => (
+          <Text style={styles.paragraph}>{`${item.first_name} ${item.last_name}`}</Text>
+        )}
+      />
       </SafeAreaProvider>
       <StatusBar style="auto" />
-      
     </View>
   );
 }
