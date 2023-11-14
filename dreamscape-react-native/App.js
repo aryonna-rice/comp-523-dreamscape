@@ -3,7 +3,7 @@ import { StyleSheet, View, FlatList } from 'react-native';
 import { Header as HeaderRNE, HeaderProps, Icon } from '@rneui/themed';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {Dimensions} from 'react-native';
-import { Image, Input, Button, ButtonGroup, Text} from '@rneui/themed';
+import { Image, Input, Button, Text} from '@rneui/themed';
 import React, { useState, useEffect } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import axios from 'axios';
@@ -11,7 +11,6 @@ import axios from 'axios';
 const logo = require('./assets/logo.png')
 const windowWidth = Dimensions.get('window').width;
 const screenWidth = Dimensions.get('screen').width;
-const baseUrl = 'http://localhost:8000/api';
 
 export default function App() {
   const [firstName, setFirstName] = useState('');
@@ -21,45 +20,69 @@ export default function App() {
   const [date, setDate] = useState(new Date())
   const [open, setOpen] = useState(false)
 
-  const [patients, setPatients] = useState([]);
-  
-    useEffect(() => {
-      const fetchPatients = async () => {
-        try {
-          const response = await axios.get('http://localhost:8000/api/user', {
-            params: {
-              device_id: 2002,
-            },
-          });
-          setPatients([response.data]);
-          console.log(response.data);
-        } catch (error) {
-          console.error('Error fetching patients:', error);
+  const [deviceId, setDeviceId] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+
+
+  const handleSearchSubmit = () => {
+    console.log('Searching for patient with Device ID:', deviceId);
+    axios
+      .get(`http://localhost:8000/api/user?device_id=${deviceId}`)
+      .then((response) => {
+        // Handle success (e.g., display search results)
+        if (response.data === null || response.data.length === 0) {
+          // If response data is null or empty, display an alert
+          Alert.alert('No Results', 'No matching results found.');
+        } else {
+          // Update search results state
+          setSearchResults(response.data);
         }
-      };
-  
-      fetchPatients();
-    }, []);
+        // You can handle the search results as needed for your application
+      })
+      .catch((error) => {
+        // Handle error
+        alert('No user found with that Device ID. Please try again.');
+        if (error.response) {
+          console.error('Server responded with non-2xx status:', error.response.status);
+          console.error('Response data:', error.response.data);
+          console.error('Response headers:', error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.error('No response received from the server');
+          console.error('Request data:', error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error('Error setting up the request:', error.message);
+        }
+        console.error('Full error object:', error);
+      });
+  };
+
   
   const handleSubmit = () => {
     const patientData = {
-      id : 1010,
+      id : Math.floor(Math.random() * 200),
       first_name: firstName,
       last_name:lastName,
-      device_id: 1010,
+      device_id: Math.floor(Math.random() * 200),
       dob,
       gender,
     };
 
     console.log('Submitting patientData:', patientData);
+    setFirstName('');
+    setLastName('');
+    setDOB('');
+    setGender('');
 
     axios.post('http://localhost:8000/api/user', patientData)
     .then(response => {
       // Handle success (e.g., show a success message, navigate to a new screen)
       console.log('Patient registered:', response.data);
-    })
+      alert('Patient registered successfully! Device ID:' + response.data.device_id)})
     .catch(error => {
       // Handle error (e.g., show an error message)
+      alert('Error registering patient. Please try again.');
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
@@ -154,18 +177,20 @@ export default function App() {
         <Text style={styles.header2}>Find a Patient</Text>
         <Input
           style={styles.input}  
-          placeholder="Last Name"
+          placeholder="Device ID"
+          value={deviceId}
+          onChangeText={text => setDeviceId(text)}
         />
-        <Button type="submit" style={styles.search}><SearchOutlined /></Button>
+        <Button type="submit" style={styles.search} onPress={handleSearchSubmit} ><SearchOutlined /></Button>
+        <FlatList
+          data={[searchResults.first_name, searchResults.last_name, searchResults.dob, searchResults.gender]}
+          renderItem={({ item }) => ( 
+            <Text style={styles.paragraph}>
+              {item}
+            </Text>
+          )}
+        />
       </form>
-      <Text style={styles.header2}>List of Patients:</Text>
-      <FlatList
-        data={patients}
-        keyExtractor={(item) => item.device_id}
-        renderItem={({ item }) => (
-          <Text style={styles.paragraph}>{`${item.first_name} ${item.last_name}`}</Text>
-        )}
-      />
       </SafeAreaProvider>
       <StatusBar style="auto" />
     </View>
@@ -182,7 +207,6 @@ const styles = StyleSheet.create({
   },
   input: {
     color: '#FFFFFF',
-    margin: 5,
   },
   form: { 
     alignSelf: 'center',
@@ -201,7 +225,6 @@ const styles = StyleSheet.create({
   search: {
     backgroundColor: '#5A6BFF',
     color: '#FFFFFF',
-    width: 40,
   },
   container: {
     backgroundColor: '#19173D',
