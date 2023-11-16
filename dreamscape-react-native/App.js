@@ -20,11 +20,40 @@ export default function App() {
   const [date, setDate] = useState(new Date())
   const [open, setOpen] = useState(false)
 
+  const [allData, setAllData] = useState([]);
   const [deviceId, setDeviceId] = useState('');
   const[searchLast, setSearchLast] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
-  const handleSearchSubmit = () => {
+  useEffect(() => {
+    axios
+      .get('http://localhost:8000/api/user/list')
+      .then((response) => {
+        // Handle success (e.g., display search results)
+        console.log('All patients:', response.data);
+        setAllData(response.data);
+        // You can handle the search results as needed for your application
+      })
+      .catch((error) => {
+        // Handle error
+        alert('Error retrieving patients. Please try again.');
+        if (error.response) {
+          console.error('Server responded with non-2xx status:', error.response.status);
+          console.error('Response data:', error.response.data);
+          console.error('Response headers:', error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.error('No response received from the server');
+          console.error('Request data:', error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error('Error setting up the request:', error.message);
+        }
+        console.error('Full error object:', error);
+      });
+  }, []);
+
+  const handleSearch = () => {
     let apiUrl = '';
     if (deviceId) {
       apiUrl = `http://localhost:8000/api/user?device_id=${deviceId}`;
@@ -211,7 +240,7 @@ export default function App() {
             }
           }}
         />
-        <Button type="submit" style={styles.search} onPress={handleSearchSubmit} ><SearchOutlined /></Button>
+        <Button type="submit" style={styles.search} onPress={handleSearch} ><SearchOutlined /></Button>
         {/* <Text style={styles.paragraph}>First Name: {searchResults.first_name}</Text> */}
         <FlatList
           data={[searchResults.id, searchResults.first_name, searchResults.last_name, searchResults.dob, searchResults.gender]}
@@ -221,6 +250,17 @@ export default function App() {
             </Text>
           )}
         />
+      </form>
+      <form style={styles.form}>
+        <Text style={styles.header2}>All Data</Text>
+        <FlatList
+          data={allData}
+          renderItem={({ item }) => (
+            <Text style={styles.paragraph}>
+              Patient ID: {item.id} | {item.first_name} {item.last_name} | {item.dob} | {item.gender} | Device ID: {item.device_id}
+            </Text>
+          )}
+        /> 
       </form>
       </SafeAreaProvider>
       <StatusBar style="auto" />
@@ -256,6 +296,7 @@ const styles = StyleSheet.create({
   search: {
     backgroundColor: '#5A6BFF',
     color: '#FFFFFF',
+    padding: 5,
   },
   container: {
     backgroundColor: '#19173D',
