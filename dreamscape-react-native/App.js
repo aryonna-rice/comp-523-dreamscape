@@ -1,12 +1,16 @@
 import { setStatusBarHidden, StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, FlatList } from 'react-native';
-import { Header as HeaderRNE, HeaderProps, Icon } from '@rneui/themed';
+import { Header as HeaderRNE, HeaderProps, Icon, ThemeProvider } from '@rneui/themed';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {Dimensions} from 'react-native';
 import { Image, Input, Button, Text} from '@rneui/themed';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+} from 'material-react-table';
 
 const logo = require('./assets/logo.png')
 const windowWidth = Dimensions.get('window').width;
@@ -17,8 +21,6 @@ export default function App() {
   const [lastName, setLastName] = useState('');
   const [dob, setDOB] = useState('');
   const [gender, setGender] = useState('');
-  const [date, setDate] = useState(new Date())
-  const [open, setOpen] = useState(false)
 
   const [allData, setAllData] = useState([]);
   const [deviceId, setDeviceId] = useState('');
@@ -162,6 +164,62 @@ export default function App() {
     }
     return input.slice(0, 10);
   };
+  
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'id', //access nested data with dot notation
+        header: 'Patient ID',
+        size: 3,
+      },
+      {
+        accessorKey: 'device_id', //access nested data with dot notation
+        header: 'Device ID',
+        size: 3,
+      },
+      {
+        accessorKey: 'first_name', //access nested data with dot notation
+        header: 'First Name',
+        size: 20,
+      },
+      {
+        accessorKey: 'last_name', //access nested data with dot notation
+        header: 'Last Name',
+        size: 20,
+      },
+      {
+        accessorKey: 'dob', //access nested data with dot notation
+        header: 'DOB',
+        size: 10,
+      },
+      {
+        accessorKey: 'gender', //access nested data with dot notation
+        header: 'Gender',
+        size: 10,
+      },
+    ],
+    [],
+  );
+
+
+  const table = useMaterialReactTable({
+    columns,
+    data: allData,
+    initialState: {density: 'compact'},
+    muiTableHeadCellProps: {
+      style: {
+        backgroundColor: '#6373ff',
+        color: 'white',
+      },
+    },
+    muiTableFooterCellProps: {
+      style: {
+        backgroundColor: '#6373ff',
+        color: 'white',
+      },
+    },
+    
+  });
 
   return (
     <View style={styles.container}>
@@ -253,15 +311,14 @@ export default function App() {
       </form>
       <form style={styles.form}>
         <Text style={styles.header2}>All Data</Text>
-        <FlatList
-          data={allData}
-          renderItem={({ item }) => (
-            <Text style={styles.paragraph}>
-              Patient ID: {item.id} | {item.first_name} {item.last_name} | {item.dob} | {item.gender} | Device ID: {item.device_id}
-            </Text>
-          )}
-        /> 
+        <br></br>
+        <br></br>
+          <MaterialReactTable 
+            table={table}
+          />
+        <br></br>
       </form>
+      
       </SafeAreaProvider>
       <StatusBar style="auto" />
     </View>
@@ -281,7 +338,6 @@ const styles = StyleSheet.create({
   },
   form: { 
     alignSelf: 'center',
-    backgroundColor: '#19173D',
     padding: 10,
     margin: 10,
     width: windowWidth/2,
