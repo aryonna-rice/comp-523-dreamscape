@@ -35,6 +35,7 @@ def setup(test_session: Session):
     yield
 
 # Set up service
+@pytest.fixture()
 def user_service(test_session: Session):
     return UserService(test_session)
 
