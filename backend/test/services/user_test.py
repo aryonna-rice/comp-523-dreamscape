@@ -85,3 +85,27 @@ def test_update(user_service: UserService):
     assert update_result == user_to_update
     query_result = user_service.get(user_to_update.device_id)
     assert query_result == user_to_update
+
+def test_add_empty_first_name(user_service: UserService):
+    new_user = User(id=None, first_name="", last_name="Here", device_id=5811, gender=None, dob=date(2000, 4, 17))
+    try:
+        user_service.add(new_user)
+        assert False
+    except ValueError:
+        assert True
+
+def test_add_empty_last_name(user_service: UserService):
+    new_user = User(id=None, last_name="", first_name="Here", device_id=5811, gender=None, dob=date(2000, 4, 17))
+    try:
+        user_service.add(new_user)
+        assert False
+    except ValueError:
+        assert True
+
+def test_add_empty_both_names(user_service: UserService):
+    new_user = User(id=None, last_name="", first_name="", device_id=5811, gender=None, dob=date(2000, 4, 17))
+    try:
+        user_service.add(new_user)
+        assert False
+    except ValueError:
+        assert True
