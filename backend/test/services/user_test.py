@@ -37,3 +37,50 @@ def setup(test_session: Session):
 # Set up service
 def user_service(test_session: Session):
     return UserService(test_session)
+
+def test_get1(user_service: UserService):
+    query_result = user_service.get(user2.device_id)
+    assert query_result == user2
+
+def test_get2(user_service: UserService):
+    query_result = user_service.get(user5.device_id)
+    assert query_result == user5
+
+def test_search_name_first(user_service: UserService):
+    query_result = user_service.search_name(first_name=user1.first_name, last_name=None)
+    assert query_result == [user1]
+
+def test_search_name_last(user_service: UserService):
+    query_result = user_service.search_name(first_name=None, last_name=user4.last_name)
+    assert query_result == [user4]
+
+def test_search_name_both(user_service: UserService):
+    query_result = user_service.search_name(first_name=user5.first_name, last_name=user5.last_name)
+    assert query_result == [user5]
+
+def test_search_name_multi_result(user_service: UserService):
+    query_result = user_service.search_name(first_name=None, last_name=user1.last_name)
+    assert query_result == [user1, user2, user3]
+
+def test_search_name_no_result(user_service: UserService):
+    query_result = user_service.search_name(first_name="No name", last_name=None)
+    assert query_result == []
+
+def test_list(user_service: UserService):
+    query_result = user_service.list_users()
+    assert query_result == models
+
+def test_add(user_service: UserService):
+    new_user = User(id=5, first_name="Melissa", last_name="Monroe", device_id=9838, gender="Female")
+    add_result = user_service.add(new_user)
+    assert add_result == new_user
+    query_result = user_service.get(new_user.device_id)
+    assert query_result == new_user
+
+def test_update(user_service: UserService):
+    user_to_update = user_service.get(user5.device_id)
+    user_to_update.last_name = "Roberts"
+    update_result = user_service.update(user_to_update)
+    assert update_result == user_to_update
+    query_result = user_service.get(user_to_update.device_id)
+    assert query_result == user_to_update
