@@ -72,7 +72,7 @@ def test_list(user_service: UserService):
     assert query_result == models
 
 def test_add(user_service: UserService):
-    new_user = User(id=5, first_name="Melissa", last_name="Monroe", device_id=9838, gender="Female")
+    new_user = User(id=5, first_name="Melissa", last_name="Monroe", device_id=9838, gender="Female", dob=date(1958, 6, 4))
     add_result = user_service.add(new_user)
     assert add_result == new_user
     query_result = user_service.get(new_user.device_id)
