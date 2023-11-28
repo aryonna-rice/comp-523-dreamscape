@@ -1,11 +1,17 @@
 import * as React from 'react';
+import Table from './Table'
+import AddUser from './AddUser'
 
 export default function AllDataTable() {
-  return (
-    <header className="App-header">
-      <p>
-        All Data Table
-      </p>
-    </header>
+  return (<>
+
+    <div className="table-container">
+        <h1>All Data</h1>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Table />
+          <AddUser/>
+        </div>
+    </div>
+    </>
   );
 }
