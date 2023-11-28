@@ -3,7 +3,7 @@
 from ...models import User
 from datetime import date
 
-user1 = User(id=0, first_name="First", last_name="Patient", device_id=0000, dob="1950/4/24", gender="Male")
+user1 = User(id=0, first_name="First", last_name="Patient", device_id=0000, dob="4/24/1992", gender="Male")
 
 user2 = User(id=1, first_name="Second", last_name="Patient", device_id=1280, dob="08/03/2002", gender="Female")
 
