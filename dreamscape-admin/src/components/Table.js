@@ -44,27 +44,27 @@ const AllDataTable = () => {
       const columns = useMemo(
         () => [
           {
-            accessorKey: 'id', //access nested data with dot notation
+            accessorKey: 'id', 
             header: 'Patient ID',
             size: 3,
           },
           {
-            accessorKey: 'device_id', //access nested data with dot notation
+            accessorKey: 'device_id', 
             header: 'Device ID',
             size: 3,
           },
           {
-            accessorKey: 'first_name', //access nested data with dot notation
+            accessorKey: 'first_name', 
             header: 'First Name',
             size: 20,
           },
           {
-            accessorKey: 'last_name', //access nested data with dot notation
+            accessorKey: 'last_name', 
             header: 'Last Name',
             size: 20,
           },
           {
-            accessorKey: 'dob', //access nested data with dot notation
+            accessorKey: 'dob', 
             header: 'DOB',
             size: 10,
           },
