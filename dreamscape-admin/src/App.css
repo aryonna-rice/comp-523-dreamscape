@@ -52,6 +52,23 @@ a:hover {
   border-radius: 10px;
   max-height: 300px;
 }
+.search-form {
+  margin-left: 30px;
+  padding: 20px;
+  background-color: #FFFF;
+  border-radius: 10px;
+  max-height: 300px;
+}
+
+.patient-info {
+  margin-left: 30px;
+  padding: 20px;
+  background-color: #FFFF;
+  color: #19173D;
+  border-radius: 10px;
+  min-height: 300px;
+  min-width: 300px;
+}
 
 .submit {
   background-color: #5A6BFF;
