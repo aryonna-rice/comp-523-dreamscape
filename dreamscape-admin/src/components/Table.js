@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import {
   MaterialReactTable,
   useMaterialReactTable,
+  createMRTColumnHelper,
 } from 'material-react-table';
+import { mkConfig, generateCsv, download } from 'export-to-csv'; //or use your library of choice here
+import Button from '@mui/material/Button';
+
 
 const AllDataTable = () => {
     const [allData, setAllData] = useState([]);
@@ -87,8 +92,25 @@ const AllDataTable = () => {
             color: 'white',
           },
         },
+        renderTopToolbarCustomActions: () => (
+          <Button
+            onClick={handleExportData}
+          ><FileDownloadIcon/> Export All</Button>
+        ),
         
       });
+
+      const csvConfig = mkConfig({
+        fieldSeparator: ',',
+        decimalSeparator: '.',
+        useKeysAsHeaders: true,
+      });
+
+      const handleExportData = () => {
+        const csv = generateCsv(csvConfig)(allData);
+        download(csvConfig)(csv);
+      };
+
     return(
         <MaterialReactTable table={table}/>
     )
