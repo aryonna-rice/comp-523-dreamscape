@@ -2,7 +2,7 @@ import * as React from 'react';
 import Table from './Table'
 import AddUser from './AddUser'
 
-export default function AllDataTable() {
+export default function AllData() {
   return (<>
 
     <div className="table-container">
