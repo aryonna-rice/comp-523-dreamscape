@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button} from 'react-native';
 import { Image } from 'react-native';
 
 function HomeScreen() {
@@ -14,6 +14,10 @@ function HomeScreen() {
       <View style={styles.container}>
         <Text style={styles.header1}>Welcome back User!</Text>
         <Text style={styles.header2}>{date}</Text>
+        <Image source={require('../assets/logo.png')} style={styles.logo}/>
+        <Button color={'#B0E9FF'} title="Last Night's Dream"/>
+        <Button color={'#B0E9FF'} title="Set-up Muse Headset"/>
+        <Button color={'#B0E9FF'} title="View Past Dreams"/>
       </View>
     );
   }
@@ -33,6 +37,12 @@ function HomeScreen() {
       color: '#B0E9FF',
       fontSize: 20,
       marginLeft: 20,
+    },
+    logo: {
+        width: 80,
+        height: 80,
+        margin: 20,
+        alignSelf: 'center',
     },
   
   });
