@@ -1,23 +1,38 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button} from 'react-native';
 import { Image } from 'react-native';
+import { NavigationContainer, StackActions } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-function HomeScreen() {
+function DetailsScreen({ navigation }) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Details Screen</Text>
+        <Button
+          title="Go to Details... again"
+          onPress={() => navigation.push('Data')}
+        />
+      </View>
+    );
+}
+
+function HomeScreen({navigation}) {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const d = new Date();
     let month = months[d.getMonth()];
     let day = d.getDate();
     let year = d.getFullYear();
     let date = month + " " + day + ", " + year;
-  
+
+
     return (
       <View style={styles.container}>
         <Text style={styles.header1}>Welcome back User!</Text>
         <Text style={styles.header2}>{date}</Text>
         <Image source={require('../assets/logo.png')} style={styles.logo}/>
-        <Button color={'#B0E9FF'} title="Last Night's Dream"/>
+        <Button color={'#B0E9FF'} title="Last Night's Dream" />
         <Button color={'#B0E9FF'} title="Set-up Muse Headset"/>
-        <Button color={'#B0E9FF'} title="View Past Dreams"/>
+        <Button color={'#B0E9FF'} title="View Past Dreams" onPress={()=>navigation.navigate("Data")}/>
       </View>
     );
   }
