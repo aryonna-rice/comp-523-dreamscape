@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -21,13 +21,20 @@ function ProfileScreen() {
         console.log(error);
       });
     }, []);
-      
+
+    const userImages = {
+      0: require('../assets/user0.png'),
+      1: require('../assets/user1.png'),
+      2: require('../assets/user2.png'),
+    };
+
+    const profilepic = userImages[userId];
 
     return (
       <View style={styles.container}>
         <Text style={styles.header1}>Patient Profile</Text>
-        <View style={styles.profilepic}>
-
+        <View>
+          <Image source={profilepic} style={styles.profilepic}/>
         </View>
         <Text style={styles.paragraph}>Name: {firstName} {lastName}</Text>
         <Text style={styles.paragraph}>DOB: {dob}</Text>
@@ -59,12 +66,13 @@ function ProfileScreen() {
       marginTop: 10,
     },
     profilepic:{
-      width: 100,
-      height: 100,
-      backgroundColor: '#262450',
-      borderRadius: 50,
+      width: 150,
+      height: 150,
+      borderRadius: 100,
       alignSelf: 'center',
       marginTop: 20,
+      borderWidth: 2,
+      borderColor: '#B0E9FF',
     },
   });
   
