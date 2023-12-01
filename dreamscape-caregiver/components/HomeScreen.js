@@ -1,5 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Pressable, Image} from 'react-native';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function HomeScreen({navigation}) {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -9,10 +11,22 @@ function HomeScreen({navigation}) {
     let year = d.getFullYear();
     let date = month + " " + day + ", " + year;
 
+    const [firstName, setFirstName] = useState('');
+    useEffect(() => {
+      axios.get('http://localhost:8000/api/user?device_id=0')
+      .then((response) => {
+        setFirstName(response.data.first_name);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }, []);
+
+
 
     return (
       <View style={styles.container}>
-        <Text style={styles.header1}>Welcome back User!</Text>
+        <Text style={styles.header1}>Welcome back {firstName}!</Text>
         <Text style={styles.header2}>{date}</Text>
         <Image source={require('../assets/logo.png')} style={styles.logo}/>
         <View style={styles.buttons}>

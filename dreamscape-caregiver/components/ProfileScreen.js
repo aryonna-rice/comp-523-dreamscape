@@ -1,16 +1,37 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function ProfileScreen() {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [dob, setDob] = useState('');
+    const [userId, setUserId] = useState('');
+
+    useEffect(() => {
+      axios.get('http://localhost:8000/api/user?device_id=0')
+      .then((response) => {
+        setFirstName(response.data.first_name);
+        setLastName(response.data.last_name);
+        setDob(response.data.dob);
+        setUserId(response.data.id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }, []);
+      
+
     return (
       <View style={styles.container}>
         <Text style={styles.header1}>Patient Profile</Text>
         <View style={styles.profilepic}>
 
         </View>
-        <Text style={styles.paragraph}>Name</Text>
-        <Text style={styles.paragraph}>DOB</Text>
-        <Text style={styles.paragraph}>User ID</Text>
+        <Text style={styles.paragraph}>Name: {firstName} {lastName}</Text>
+        <Text style={styles.paragraph}>DOB: {dob}</Text>
+        <Text style={styles.paragraph}>User ID: {userId}</Text>
       </View>
     );
   }
