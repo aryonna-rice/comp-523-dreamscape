@@ -17,7 +17,6 @@ const Stack = createStackNavigator();
 function Root() {
   return (
     <Tab.Navigator
-    
     initialRouteName='Home'
       screenOptions={({ route }) => ({
         headerShown: false,
@@ -39,6 +38,7 @@ function Root() {
         tabBarInactiveTintColor: '#9C98DE',
         tabBarStyle: {
           backgroundColor: '#19173D',
+          borderTopWidth: 0,
         },
       })}
     >

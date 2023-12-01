@@ -14,7 +14,9 @@ function ConnectScreen() {
         >
             <Text style={styles.header2}>Connect</Text>
         </Pressable>
-        <Ionicons name="bluetooth-outline" size={24} color="#B0E9FF" style={{alignSelf: 'center', marginTop: 20}}/>
+        <Text style={styles.instructions}><Ionicons name="arrow-forward-circle" size={24} color="#B0E9FF" style={styles.icon}/> Enable bluetooth on your device</Text>
+        <Text style={styles.instructions}><Ionicons name="arrow-forward-circle" size={24} color="#B0E9FF" style={styles.icon}/> Turn on your Muse Headset</Text>
+        <Text style={styles.instructions}><Ionicons name="arrow-forward-circle" size={24} color="#B0E9FF" style={styles.icon}/> Press the connect button</Text>
       </View>
     );
   }
@@ -46,6 +48,7 @@ function ConnectScreen() {
         marginLeft: 40,
         marginRight: 40,
         marginTop: 20,
+        marginBottom: 20,
     },
     headset: {
         alignSelf: 'center',
@@ -54,7 +57,13 @@ function ConnectScreen() {
         marginTop: 20,
         borderRadius: 20,
     },
-
+    instructions: {
+        color: '#FFFF',
+        fontSize: 15,
+        marginLeft: 40,
+        marginRight: 40,
+        marginBottom: 10,
+    },
 
   });
   
