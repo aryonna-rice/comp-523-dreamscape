@@ -54,7 +54,7 @@ export default function App() {
     <View style={styles.container}>
     <NavigationContainer independent={true}>
       <Stack.Navigator>
-        <Stack.Screen options={{headerShown: false}} name="Root" component={Root}/>
+        <Stack.Screen options={{headerShown: false}} name="Back" component={Root}/>
         <Stack.Screen name="Connect" component={ConnectScreen} />
       </Stack.Navigator>
     </NavigationContainer>

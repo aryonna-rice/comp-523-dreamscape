@@ -4,7 +4,13 @@ import { StyleSheet, Text, View } from 'react-native';
 function ProfileScreen() {
     return (
       <View style={styles.container}>
-        <Text style={styles.header1}>Profile data will go here.</Text>
+        <Text style={styles.header1}>Patient Profile</Text>
+        <View style={styles.profilepic}>
+
+        </View>
+        <Text style={styles.paragraph}>Name</Text>
+        <Text style={styles.paragraph}>DOB</Text>
+        <Text style={styles.paragraph}>User ID</Text>
       </View>
     );
   }
@@ -13,7 +19,7 @@ function ProfileScreen() {
     container: {
       flex: 1,
       backgroundColor: '#19173D',
-      justifyContent: 'center',
+      paddingTop: 80,
     },
     header1: {
       color: '#B0E9FF',
@@ -25,7 +31,20 @@ function ProfileScreen() {
       fontSize: 20,
       marginLeft: 20,
     },
-  
+    paragraph: {
+      color: '#FFFF',
+      fontSize: 17,
+      marginLeft: 20,
+      marginTop: 10,
+    },
+    profilepic:{
+      width: 100,
+      height: 100,
+      backgroundColor: '#262450',
+      borderRadius: 50,
+      alignSelf: 'center',
+      marginTop: 20,
+    },
   });
   
 

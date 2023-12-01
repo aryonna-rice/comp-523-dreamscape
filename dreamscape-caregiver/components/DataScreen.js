@@ -5,8 +5,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 function DataScreen() {
-  const [date, setDate] = useState(new Date(1598052030000));
-  const [mode, setMode] = useState('date');
+  const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
 
   const onChange = (event, selectedDate) => {
@@ -15,24 +14,28 @@ function DataScreen() {
     setDate(currentDate);
   };
 
+  const formattedDate = date.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
     return (
       <View style={styles.container}>
-        <Text style={styles.header1}>Past Data</Text>
+        <Text style={styles.header1}>Sleep Data</Text>
         <Text style={styles.paragraph}>Choose a date</Text>
         <DateTimePicker
           testID="dateTimePicker"
           value={date}
-          mode={mode}
+          mode={'date'}
           onChange={onChange}
+          is24Hour={true}
+          style={styles.datepicker}
         />
-        <Image source={require('../assets/logo.png')} style={styles.logo}/>
-        <View style={styles.buttons}>
-          <Pressable 
-              style={({ pressed }) => [{backgroundColor: pressed ? '#B0E9FF' : '#19173D'}, styles.button]}
-              onPress={() => alert('Last Night\'s Dream')}
-          >
-              <Text style={styles.btntext}>Last Night's Dream</Text>
-          </Pressable>
+        <View style={styles.selectedData}>
+          <Text style={styles.paragraph}>Your dream from {formattedDate}</Text>
+          <Image source={require('../assets/cat.png')} style={styles.dreamimg}/>
+          <Image source={require('../assets/nyc.png')} style={styles.dreamimg}/>
         </View>
       </View>
     );
@@ -44,12 +47,13 @@ function DataScreen() {
       backgroundColor: '#19173D',
       paddingTop: 80,
     },
-    buttons:{
+    selectedData:{
       flex: 1,
       backgroundColor: '#262450',
       paddingTop: 20,
       borderTopEndRadius: 30,
       borderTopStartRadius: 30,
+      marginTop: 20,
     },
     header1: {
       color: '#B0E9FF',
@@ -90,6 +94,19 @@ function DataScreen() {
       marginLeft: 40,
       marginRight: 40,
       marginTop: 20,
+  },
+  datepicker: {
+    alignSelf: 'center',
+    backgroundColor: '#B0E9FF',
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  dreamimg: {
+    width: 150,
+    height: 150,
+    alignSelf: 'center',
+    marginTop: 10,
+    borderRadius: 20,
   },
   
   });

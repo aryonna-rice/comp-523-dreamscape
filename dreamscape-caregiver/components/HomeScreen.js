@@ -18,7 +18,8 @@ function HomeScreen({navigation}) {
         <View style={styles.buttons}>
           <Pressable 
               style={({ pressed }) => [{backgroundColor: pressed ? '#B0E9FF' : '#19173D'}, styles.button]}
-              onPress={() => alert('Last Night\'s Dream')}
+              onPress={() => navigation.navigate("Data")}
+
           >
               <Text style={styles.btntext}>Last Night's Dream</Text>
           </Pressable>
