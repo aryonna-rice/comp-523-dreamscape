@@ -26,3 +26,7 @@ def register(user: User, user_svc: UserService = Depends()):
 @api.put("", response_model=User | None, tags=['User'])
 def update(user: User, user_svc: UserService = Depends()):
     return user_svc.update(user)
+
+@api.delete("", tags=['User'])
+def delete(id: int, user_svc: UserService = Depends()):
+    user_svc.delete(id)
