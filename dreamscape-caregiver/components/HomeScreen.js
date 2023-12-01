@@ -1,9 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button} from 'react-native';
-import { Image } from 'react-native';
-import { NavigationContainer, StackActions } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import { StyleSheet, Text, View, Pressable, Image} from 'react-native';
 
 function HomeScreen({navigation}) {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -19,9 +15,26 @@ function HomeScreen({navigation}) {
         <Text style={styles.header1}>Welcome back User!</Text>
         <Text style={styles.header2}>{date}</Text>
         <Image source={require('../assets/logo.png')} style={styles.logo}/>
-        <Button color={'#B0E9FF'} title="Last Night's Dream" />
-        <Button color={'#B0E9FF'} title="Set-up Muse Headset"/>
-        <Button color={'#B0E9FF'} title="View Past Dreams" onPress={()=>navigation.navigate("Data")}/>
+        <View style={styles.buttons}>
+          <Pressable 
+              style={({ pressed }) => [{backgroundColor: pressed ? '#B0E9FF' : '#19173D'}, styles.button]}
+              onPress={() => alert('Last Night\'s Dream')}
+          >
+              <Text style={styles.btntext}>Last Night's Dream</Text>
+          </Pressable>
+          <Pressable
+              style={({ pressed }) => [{backgroundColor: pressed ? '#B0E9FF' : '#19173D'}, styles.button]}
+              onPress={() => navigation.navigate("Connect")}
+          >
+              <Text style={styles.btntext}>Set-up Muse Headset</Text>
+          </Pressable>
+          <Pressable
+              style={({ pressed }) => [{backgroundColor: pressed ? '#B0E9FF' : '#19173D'}, styles.button]}
+              onPress={() => navigation.navigate("Data")}
+          >
+              <Text style={styles.btntext}>View Past Dreams</Text>
+          </Pressable>
+        </View>
       </View>
     );
   }
@@ -30,7 +43,14 @@ function HomeScreen({navigation}) {
     container: {
       flex: 1,
       backgroundColor: '#19173D',
-      justifyContent: 'center',
+      paddingTop: 80,
+    },
+    buttons:{
+      flex: 1,
+      backgroundColor: '#262450',
+      paddingTop: 20,
+      borderTopEndRadius: 30,
+      borderTopStartRadius: 30,
     },
     header1: {
       color: '#B0E9FF',
@@ -42,12 +62,30 @@ function HomeScreen({navigation}) {
       fontSize: 20,
       marginLeft: 20,
     },
+    btntext:{
+        color: '#FFFF',
+        fontSize: 17,
+        padding: 10,
+    },
     logo: {
-        width: 80,
-        height: 80,
-        margin: 20,
+        width: 100,
+        height: 100,
+        margin: 30,
         alignSelf: 'center',
     },
+    button: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 12,
+      paddingHorizontal: 32,
+      borderRadius: 50,
+      borderWidth: 2,
+      borderColor: '#2836B4',
+      elevation: 3,
+      marginLeft: 40,
+      marginRight: 40,
+      marginTop: 20,
+  },
   
   });
   
