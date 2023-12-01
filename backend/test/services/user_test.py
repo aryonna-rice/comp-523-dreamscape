@@ -84,3 +84,9 @@ def test_update(user_service: UserService):
     assert update_result == user_to_update
     query_result = user_service.get(user_to_update.device_id)
     assert query_result == user_to_update
+
+def test_delete(user_service: UserService):
+    user_to_delete = user_service.get(user3.device_id)
+    user_service.delete(user_to_delete.id)
+    query_result = user_service.get(user_to_delete.device_id)
+    assert query_result == None
