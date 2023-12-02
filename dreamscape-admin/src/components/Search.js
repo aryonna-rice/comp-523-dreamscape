@@ -1,5 +1,5 @@
-
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
+import React, { useRef } from 'react';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import '../App.css';
@@ -8,12 +8,16 @@ import Stack from '@mui/material/Stack';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import Typography from '@mui/material';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 const Search = () => {
     const [deviceId, setDeviceId] = useState('');
     const[searchLast, setSearchLast] = useState('');
     const [searchResults, setSearchResults] = useState({});
+    const [searchSuccess, setSearchSuccess] = useState(false);
 
     const handleSearch = () => {
         let apiUrl = '';
@@ -36,9 +40,11 @@ const Search = () => {
               console.log('Search results:', response.data);
               if (deviceId) {
                 setSearchResults(response.data);
+                setSearchSuccess(true);
               }
               else if (searchLast) {
                 setSearchResults(response.data[0]);
+                setSearchSuccess(true);
               }
             }
             // You can handle the search results as needed for your application
@@ -47,19 +53,44 @@ const Search = () => {
             // Handle error
             alert('No user found with that Device ID. Please try again.');
             if (error.response) {
+              setSearchSuccess(false);
               console.error('Server responded with non-2xx status:', error.response.status);
               console.error('Response data:', error.response.data);
               console.error('Response headers:', error.response.headers);
             } else if (error.request) {
               // The request was made but no response was received
+              setSearchSuccess(false);
               console.error('No response received from the server');
               console.error('Request data:', error.request);
             } else {
               // Something happened in setting up the request that triggered an Error
+              setSearchSuccess(false);
               console.error('Error setting up the request:', error.message);
             }
+            setSearchSuccess(false);
             console.error('Full error object:', error);
           });
+      };
+      
+      const fileInputRef = useRef(null);
+      const [selectedFileName, setSelectedFileName] = useState('');
+
+      const handleUploadCSV = async (event) => {
+        try {
+          const file = event.target.files[0];
+    
+          if (file) {
+            // Implement your logic to read and process the CSV file
+            console.log('Selected file:', file);
+            setSelectedFileName(file.name);
+    
+            // You may want to use FileReader or another library to read the contents of the file
+          }
+    
+        } catch (err) {
+          // Handle errors
+          console.error(err);
+        }
       };
 
       const listItems = [
@@ -69,6 +100,10 @@ const Search = () => {
         { label: 'Date of Birth', value: searchResults.dob },
         { label: 'Gender', value: searchResults.gender },
         { label: 'Device ID', value: searchResults.device_id },
+      ];
+
+      const actions = [
+        { icon: <UploadFileIcon />, name: 'Upload CSV' },
       ];
 
     return (
@@ -104,7 +139,6 @@ const Search = () => {
                     }
                 }}
             />
-            
             <Button variant="contained" color="secondary" sx={{backgroundColor:"#5A6BFF"}} onClick={handleSearch}>Search</Button>
             <br></br>
             </Stack>
@@ -117,6 +151,36 @@ const Search = () => {
                     <ListItemText primary={item.label} secondary={item.value} />
                     </ListItem>
                 ))}
+                <ListItem>
+                    {selectedFileName && (
+                    <p style={{ color:"black" }}>
+                      Selected File: {selectedFileName}
+                    </p>
+                  )}
+                </ListItem>
+                {searchSuccess && (
+                  <SpeedDial
+                  ariaLabel="SpeedDial basic example"
+                  sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                  icon={<SpeedDialIcon />}
+                >
+                  <input
+                    type="file"
+                    onChange={handleUploadCSV}
+                    accept=".csv"
+                    style={{ display: 'none' }} // Hide the input element
+                    ref={fileInputRef} // Reference to the input element
+                  />
+                  {actions.map((action) => (
+                    <SpeedDialAction
+                      key={action.name}
+                      icon={action.icon}
+                      tooltipTitle={action.name}
+                      onClick={() => fileInputRef.current.click()}
+                    />
+                  ))}
+                </SpeedDial>
+                )}
             </List>
         </form>
         </div>
