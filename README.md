@@ -1,11 +1,11 @@
 # comp-523-dreamscape
-<<<<<<< HEAD
-## To run React
-* `cd dreamscape-react`
+
+## To run React.js Admin app
+* `cd dreamscape-admin`
+* `npm install`
 * `npm start`
 
-## To run React Native
-* `cd dreamscape-react-native`
+## To run React Native Caregiver app
+* `cd dreamscape-caregiver`
+* `npm install`
 * `npm run web`
-=======
->>>>>>> f16d8a1cbb49efb2f9c973e8feae4f15008f5934
