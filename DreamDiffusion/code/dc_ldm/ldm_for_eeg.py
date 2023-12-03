@@ -1,5 +1,4 @@
 import numpy as np
-import wandb
 import torch
 from dc_ldm.util import instantiate_from_config
 from omegaconf import OmegaConf
@@ -11,7 +10,9 @@ from torchvision.utils import make_grid
 from torch.utils.data import DataLoader
 import torch.nn.functional as F
 from sc_mbm.mae_for_eeg import eeg_encoder, classify_network, mapping 
+from generate_images import get_local_file_path, delete_local_path
 from PIL import Image
+
 def create_model_from_config(config, num_voxels, global_pool):
     model = eeg_encoder(time_len=num_voxels, patch_size=config.patch_size, embed_dim=config.embed_dim,
                 depth=config.depth, num_heads=config.num_heads, mlp_ratio=config.mlp_ratio, global_pool=global_pool) 
@@ -93,19 +94,20 @@ class cond_stage_model(nn.Module):
 class eLDM:
 
     def __init__(self, metafile, num_voxels, device=torch.device('cpu'),
-                 pretrain_root='../pretrains/',
+                 pretrain_root='../../pretrains/',
                  logger=None, ddim_steps=250, global_pool=True, use_time_cond=False, clip_tune = True, cls_tune = False):
         # self.ckp_path = os.path.join(pretrain_root, 'model.ckpt')
-        self.ckp_path = os.path.join(pretrain_root, 'models/v1-5-pruned.ckpt')
+        self.ckp_path = "gs://eeg-checkpoint-files/models-v1-5-pruned.ckpt"
+        local_ckp_path = get_local_file_path(self.ckp_path)
         self.config_path = os.path.join(pretrain_root, 'models/config15.yaml') 
-        config = OmegaConf.load(self.config_path)
+        config = OmegaConf.load(local_ckp_path)
         config.model.params.unet_config.params.use_time_cond = use_time_cond
         config.model.params.unet_config.params.global_pool = global_pool
 
         self.cond_dim = config.model.params.unet_config.params.context_dim
 
         model = instantiate_from_config(config.model)
-        pl_sd = torch.load(self.ckp_path, map_location="cpu")['state_dict']
+        pl_sd = torch.load(local_ckp_path, map_location="cpu")['state_dict']
        
         m, u = model.load_state_dict(pl_sd, strict=False)
         model.cond_stage_trainable = True
@@ -131,6 +133,8 @@ class eLDM:
         self.pretrain_root = pretrain_root
         self.fmri_latent_dim = model.cond_stage_model.fmri_latent_dim
         self.metafile = metafile
+        delete_local_path(local_ckp_path)
+
 
     def finetune(self, trainers, dataset, test_dataset, bs1, lr1,
                 output_path, config=None):

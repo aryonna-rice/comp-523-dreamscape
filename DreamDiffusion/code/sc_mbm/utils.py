@@ -9,8 +9,7 @@ def get_1d_sincos_pos_embed(embed_dim, length, cls_token=False):
     return:
     pos_embed: [grid_size*grid_size, embed_dim] or [1+grid_size*grid_size, embed_dim] (w/ or w/o cls_token)
     """
-    grid_l = np.arange(length, dtype=np.float32)
-
+    grid_l = np.arange(length, dtype=float)
     grid_l = grid_l.reshape([1, length])
     pos_embed = get_1d_sincos_pos_embed_from_grid(embed_dim, grid_l)
     if cls_token:
