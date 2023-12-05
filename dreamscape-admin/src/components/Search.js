@@ -26,8 +26,9 @@ const Search = ({onDataReceived}) => {
     const [fileinfo, setFileInfo] = useState({patient_id: '', date: ''});
     const [data, setData] = useState();
 
-    const handleSearch = ({ onDataReceived }) => {
+    const handleSearch = ({ }) => {
         setSelectedFileName('');
+        onDataReceived('');
         setFileInfo({patient_id: '', date: ''});
         let apiUrl = '';
         if (deviceId) {
