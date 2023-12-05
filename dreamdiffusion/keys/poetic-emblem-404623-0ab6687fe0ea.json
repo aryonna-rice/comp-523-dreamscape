@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "poetic-emblem-404623",
+  "private_key_id": "0ab6687fe0ea072094dc740e796e40a02b368ea2",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCyQoGeLs5t++U7\nUrtM3SM+BsxNnab4dPHWVMhxZlO34IO3ZL5Cl14yOZvzmf8hrckFxiZ6Exb+hoeK\nomB4ipoa47rnGKjTtmtNAYlLNHSuLxi6WTmi1UnH97INMVR56lFDasNNre9loWJ4\nvMNwT8MkJfbJbM38kAEhC5z1v38hK054wQ3USnlwEOYJQaATLF710Liaqymz5e4L\nSowUc8v2vudGMDrZTfW5IXHbBQ5eVDDga6js6IuO8h9M0ZaPqb+ckV6YygR+obI9\nobCMS3hw5H/j2c4eTOxAMA/WZgXYtIszXsd8hpohnwCksRjt48DCkiXfzwJJ2oRO\n212PoIQDAgMBAAECggEAEJzexDrWeteGkIBwUNnXEU5u4djhw7aaXIAq7K6S+h2k\nCNu3A4ZkfUfIf0EIeZS0RE59gtOenqUzoo7pcLJyFDQe/1nZT18TzD8VaCXWWJlZ\nCPI3IIlsxoRmBTwQrwqlp3kerxxDpZ65tPOFP0VKXrxkWHdEZyzrKK+SttsG4l9P\n9wHE/aGFEZp8dqQMci/9G1VlK6NCg/ThdV6ite8srT7BevQYODzk9fg1CDqi+rZJ\nz4KEejzmSGoR7rj0U5zbFDR6La5hdP03Zmk1V/MAdn6+ZQ5zt9Eybqum5tC1qMxn\nOeTbBZx+scnrgi/KbCd6FeatjhYl3XwCKp64iuyGoQKBgQDhPWHLLJWvoYabJZ2N\nRA9Wm4zVEj1Vur6STSk2BZnhsgKrwMYaFNs8AVSxy/blwJ4ensSkhcAZp7PCAsh+\nKXyCJ4gTi9x9PFaUGJpwGiuH3ZCrd4lwbyeoM8fA3soh5pXLDehygAGENsrqO/nQ\nJcLHNwbhvfsQs03ad8ph6yABkwKBgQDKmqeswH+Kn1lgHt9kkwuugJT8fBL6lNmB\ndI1jcmAHrMbnfqRo7iX4vDUv7KS0+SS+5Zu6j09ueyi/+orYv8S0RLMSp6OOsLXC\njI9GUjowXNDhIa898Y5D5nw4yfA7AkhUKXuMACijJLbxyQXj86BXzxsueOID2ayE\n5qnL6rS50QKBgEc28iGcEiO6rWWGah8NItBeVBPWNYBSkAiPzvTepn2+m6uUQs5i\nQ8LgJNgmRgT0dsn1pvThuRAjfulbmeqR0WURfKu5b9hE6JbghIvnKlZFzoT4QYNE\nEcTTwleP2VcIodnWpuT05gXYkSWoGt8d4Uy9cDaVq7jnCDmH4Hw/LBpzAoGAQaZj\ndsLZkR2ZZGAcmwZa3qyjmjzKGZBp+ly+A99n5pTBzvlmZOnmO/cgdOsFY+7nTUQx\ndf5CCta1mZ+hpiJdptwr+nt/sBjqjKPnOS4j1M/+jzTPCA9hvfbNgclNopFWxo66\njd7vTA31idtNoVOsPUfK0wAwnHbIRDhKBN2EukECgYEAx5QBZ8lHaQm9Ed5hVD0V\nt3G+UAgi6VMBej5YilPAb1faZTlNPS/X6Oae1USSPHMfpzDo3O1W22A3sADLdI0f\nfQ/NU1PTnm7WtMMrFKTz4xsRitqT8TclIhtUaySpy09GnDRcF7Y3SagUQ+4mNag0\nd59iZhe9EqHtLMpsXaXWXnE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "upload-patient-eeg-signals@poetic-emblem-404623.iam.gserviceaccount.com",
+  "client_id": "103239293477191652531",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/upload-patient-eeg-signals%40poetic-emblem-404623.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

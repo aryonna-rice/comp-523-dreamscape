@@ -5,10 +5,10 @@ import torch
 from einops import rearrange
 from PIL import Image
 import torchvision.transforms as transforms
-from config import *
+from .config import *
 import wandb
 import datetime
-from dc_ldm.ldm_for_eeg import eLDM
+from .dc_ldm.ldm_for_eeg import eLDM
 import tempfile
 from google.cloud import storage
 
