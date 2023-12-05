@@ -12,14 +12,23 @@ import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { Alert } from '@mui/material';  
 
-const Search = () => {
+
+const Search = ({onDataReceived}) => {
     const [deviceId, setDeviceId] = useState('');
     const[searchLast, setSearchLast] = useState('');
     const [searchResults, setSearchResults] = useState({});
     const [searchSuccess, setSearchSuccess] = useState(false);
+    const [alert, setAlert] = useState(null);
+    const fileInputRef = useRef(null);
+    const [selectedFileName, setSelectedFileName] = useState('');
+    const [fileinfo, setFileInfo] = useState({patient_id: '', date: ''});
+    const [data, setData] = useState();
 
-    const handleSearch = () => {
+    const handleSearch = ({ onDataReceived }) => {
+        setSelectedFileName('');
+        setFileInfo({patient_id: '', date: ''});
         let apiUrl = '';
         if (deviceId) {
           apiUrl = `http://localhost:8000/api/user?device_id=${deviceId}`;
@@ -34,7 +43,7 @@ const Search = () => {
             // Handle success (e.g., display search results)
             if (response.data === null || response.data.length === 0) {
               // If response data is null or empty, display an alert
-              alert('No Results', 'No matching results found.');
+              setAlert({ severity: 'warning', message: 'No matching results found.' });
             } else {
               // Update search results state
               console.log('Search results:', response.data);
@@ -51,7 +60,8 @@ const Search = () => {
           })
           .catch((error) => {
             // Handle error
-            alert('No user found with that Device ID. Please try again.');
+            setAlert({ severity: 'error', message: 'No user found with that Device ID. Please try again.' });
+
             if (error.response) {
               setSearchSuccess(false);
               console.error('Server responded with non-2xx status:', error.response.status);
@@ -71,20 +81,74 @@ const Search = () => {
             console.error('Full error object:', error);
           });
       };
-      
-      const fileInputRef = useRef(null);
-      const [selectedFileName, setSelectedFileName] = useState('');
 
-      const handleUploadCSV = async (event) => {
+      function formatTimestamp(timestamp) {
+        const date = new Date(timestamp);
+      
+        const day = date.getDate();
+        const month = date.getMonth() + 1; // Months are zero-based
+        const year = date.getFullYear();
+        const hour = date.getHours();
+        const minute = date.getMinutes();
+        const second = date.getSeconds();
+      
+        const formattedDate = `${day}-${month}-${year}-${hour}-${minute}-${second}`;
+        return formattedDate;
+      }
+    
+
+      const handleUploadCSV = async (event) => { 
         try {
           const file = event.target.files[0];
+          function readFile(file) {
+            const reader = new FileReader();
     
+            reader.onload = (evt) => {
+              const contents = evt.target.result;
+              console.log('File contents:', contents);
+    
+              // Assuming the content is CSV, you can parse it
+              const rows = contents.split('\n');
+              const header = rows[0].split(',');
+    
+              const data = rows.slice(1).map(row => {
+                const values = row.split(',');
+              
+                // Check if values array is not empty and has the expected length
+                if (values.length === header.length) {
+                  return header.reduce((obj, key, index) => {
+                    // Check if values[index] is not undefined before accessing 'trim'
+                    obj[key.trim()] = values[index] ? values[index].trim() : '';
+                    return obj;
+                  }, {});
+                } else {
+                  // Handle the case where the row does not have the expected number of columns
+                  console.warn('Invalid row:', row);
+                  return null; // or handle it according to your requirements
+                }
+              }).filter(row => row !== null); // Remove null entries caused by invalid rows
+    
+              // Log the parsed data    
+              // Now you can format and display the data as a table
+              // (you can use a library like Material-UI Table for better styling)
+              setData(data);
+              onDataReceived(data);
+              console.table(data);
+              // index the data in the first row:
+              console.log(data[0]["TimeStamp"]);
+              console.log(data.length);
+             
+            };
+            reader.readAsText(file);
+          }
+
           if (file) {
-            // Implement your logic to read and process the CSV file
             console.log('Selected file:', file);
             setSelectedFileName(file.name);
-    
-            // You may want to use FileReader or another library to read the contents of the file
+            setFileInfo({patient_id: searchResults.id, date: formatTimestamp(file.lastModified)});
+            // may want to use FileReader or another library to read the xcontents of the file
+            // console.log('File contents:', readFile(file));
+            readFile(file);
           }
     
         } catch (err) {
@@ -92,6 +156,16 @@ const Search = () => {
           console.error(err);
         }
       };
+      
+      
+      useEffect(() => {
+        console.log('File Info:', fileinfo);
+      }, [fileinfo]);
+
+      const handleCloseAlert = () => {
+        setAlert(null);
+      };
+
 
       const listItems = [
         { label: 'ID', value: searchResults.id },
@@ -111,6 +185,11 @@ const Search = () => {
         <div>
         <form className='search-form'>
         <Stack spacing={1} sx={{ width: 300 }}>
+        {alert && (
+          <Alert severity={alert.severity} onClose={handleCloseAlert}>
+            {alert.message}
+          </Alert>
+        )}
             <h3 className="header2">Find Patient</h3>
             <TextField 
                 color='primary'
@@ -120,7 +199,6 @@ const Search = () => {
                 onChange={(e) => {
                     if (searchLast === '') {
                         if (isNaN(e.target.value)) {
-                            alert('Device ID must be a number');
                             return;
                         }
                         setDeviceId(e.target.value);
@@ -153,9 +231,9 @@ const Search = () => {
                 ))}
                 <ListItem>
                     {selectedFileName && (
-                    <p style={{ color:"black" }}>
-                      Selected File: {selectedFileName}
-                    </p>
+                        <p style={{ color:"black" }}>
+                          Selected File: {selectedFileName}
+                        </p>
                   )}
                 </ListItem>
                 {searchSuccess && (
