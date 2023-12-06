@@ -83,6 +83,37 @@ const Search = ({onDataReceived}) => {
           });
       };
 
+      const handleDelete = () => {
+        console.log('Deleting patient with Device ID:', deviceId);
+        axios
+          .delete(`http://localhost:8000/api/user?id=${searchResults.id}`)
+          .then((response) => {
+            // Handle success (e.g., display confirmation message)
+            console.log('Patient deleted successfully');
+            setAlert({ severity: 'success', message: 'Patient deleted successfully.' });
+            setSearchSuccess(false);
+            setSearchResults({});
+            setDeviceId('');
+          })
+          .catch((error) => {
+            // Handle error
+            setAlert({ severity: 'error', message: 'No user found with that Device ID. Please try again.' });
+            if (error.response) {
+              console.error('Server responded with non-2xx status:', error.response.status);
+              console.error('Response data:', error.response.data);
+              console.error('Response headers:', error.response.headers);
+            } else if (error.request) {
+              // The request was made but no response was received
+              console.error('No response received from the server');
+              console.error('Request data:', error.request);
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              console.error('Error setting up the request:', error.message);
+            }
+            console.error('Full error object:', error);
+          });
+      };
+
       function formatTimestamp(timestamp) {
         const date = new Date(timestamp);
       
@@ -186,11 +217,6 @@ const Search = ({onDataReceived}) => {
         <div>
         <form className='search-form'>
         <Stack spacing={1} sx={{ width: 300 }}>
-        {alert && (
-          <Alert severity={alert.severity} onClose={handleCloseAlert}>
-            {alert.message}
-          </Alert>
-        )}
             <h3 className="header2">Find Patient</h3>
             <TextField 
                 color='primary'
@@ -223,6 +249,12 @@ const Search = ({onDataReceived}) => {
             </Stack>
         </form>
         <br></br>
+        {alert && (
+          <Alert severity={alert.severity} onClose={handleCloseAlert}>
+            {alert.message}
+          </Alert>
+        )}
+        <br></br>
         <form className='patient-info'>
             <List component="nav" aria-label="search results list">
                 {listItems.map((item, index) => (
@@ -238,6 +270,7 @@ const Search = ({onDataReceived}) => {
                   )}
                 </ListItem>
                 {searchSuccess && (
+                  <Stack>
                   <SpeedDial
                   ariaLabel="SpeedDial basic example"
                   sx={{ position: 'absolute', bottom: 16, right: 16 }}
@@ -257,8 +290,11 @@ const Search = ({onDataReceived}) => {
                       tooltipTitle={action.name}
                       onClick={() => fileInputRef.current.click()}
                     />
+                  
                   ))}
                 </SpeedDial>
+                <Button color="primary" onClick={handleDelete}>Delete Patient</Button>
+                </Stack>
                 )}
             </List>
         </form>
