@@ -1,18 +1,18 @@
-from .dataset import *
+from dataset import *
 import os, sys
 import numpy as np
 import torch
 from einops import rearrange
 from PIL import Image
 import torchvision.transforms as transforms
-from .config import *
+from config import *
 import wandb
 import datetime
-from .dc_ldm.ldm_for_eeg import eLDM
+from dc_ldm.ldm_for_eeg import eLDM
 import tempfile
 from google.cloud import storage
-from .gcs_utils import *
-from .config import Config_Generative_Model
+from gcs_utils import *
+import argparse
 
 PATIENT_IMAGE_BUCKET = "patient-eeg-images"
 PATIENT_EEG_SIGNALS_BUCKET = "patient-eeg-signals"
@@ -58,19 +58,42 @@ class random_crop:
         if torch.rand(1) < self.p:
             return transforms.RandomCrop(size=(self.size, self.size))(img)
         return img
+    
+def get_args_parser():
+    parser = argparse.ArgumentParser('Double Conditioning LDM Finetuning', add_help=False)
+    # project parameters
+    parser.add_argument('--root', type=str, default='../dreamdiffusion/')
+    parser.add_argument('--dataset', type=str, default='GOD')
+    #parser.add_argument('--model_path', type=str)
+    parser.add_argument('--patient_id', type=int)
+    parser.add_argument('--eeg_signals_path', type=str)
 
- 
-def generate_image(patient_id: int, eeg_signals_path: str):
-    """eeg_signals_path is really a name for an object."""
+    return parser
+
+
+if __name__ == '__main__':
+    args = get_args_parser()
+    args = args.parse_args()
+    root = args.root
+    target = args.dataset
+    patient_id = args.patient_id
+    eeg_signals_path = args.eeg_signals_path
+    
+    # argumnent: python3 code/generate_images.py --dataset EEG --patient_id 0 --eeg_signals_path gs://patient-eeg-signals/0/05-12-2023-20-31-20.pth
+    print(f"Current working directory: {os.getcwd()}")
+    print(f"Provided model path: {args.model_path}")
+
     # Define the GCS path based on patient_id and datetime
     datetime_str = datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
-    gcs_output_path = f"{PATIENT_IMAGE_BUCKET}/{patient_id}/{datetime_str}/"
-
+    gcs_output_path = f"{PATIENT_IMAGE_BUCKET}/{patient_id}/{datetime_str}/" 
+    
     # Load pre-trained model checkpoint
+    print("Loading pre-trained model checkpoint...")
     local_model_path = get_local_file_path(MODEL_PATH)
     sd = torch.load(local_model_path, map_location='cpu')
     config = sd['config']
-
+    print("Pre-trained model checkpoint loaded successfully.")
+    
     # update paths
     config.root_path = ROOT
     local_eeg_signals_path = get_local_file_path(eeg_signals_path)
@@ -78,7 +101,7 @@ def generate_image(patient_id: int, eeg_signals_path: str):
     local_pretrain_mbm_path = get_local_file_path("gs://eeg-checkpoint-files/results-eeg_pretrain-28-11-2023-21-07-25-checkpoints-checkpoint.pth")
     config.pretrain_mbm_path = local_pretrain_mbm_path
     config.pretrain_gm_path = 'pretrains/'
-
+    
     print("Updated config:")
     print(config.__dict__)
     

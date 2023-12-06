@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from .util import instantiate_from_config
+from util import instantiate_from_config
 from omegaconf import OmegaConf
 import torch.nn as nn
 import os
@@ -9,8 +9,8 @@ from einops import rearrange, repeat
 from torchvision.utils import make_grid
 from torch.utils.data import DataLoader
 import torch.nn.functional as F
-from ..sc_mbm.mae_for_eeg import eeg_encoder, classify_network, mapping 
-from ..gcs_utils import *
+from sc_mbm.mae_for_eeg import eeg_encoder, classify_network, mapping 
+from gcs_utils import *
 from PIL import Image
 
 def create_model_from_config(config, num_voxels, global_pool):
