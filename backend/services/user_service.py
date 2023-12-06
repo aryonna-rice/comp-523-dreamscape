@@ -39,11 +39,14 @@ class UserService:
         return [entity.to_model() for entity in user_entities]
 
     def add(self, user: User) -> User | None:
-        '''Function used to add to the database'''
+        '''Function used to add to the database
+        Raises a ValueError when either first or last name is empty
+        '''
+        if (user.first_name == "" or user.last_name == ""):
+            raise ValueError
         entity = UserEntity.from_model(user)
         self._session.add(entity)
         self._session.commit()
-        
         return entity.to_model()
     
     def update(self, user: User) -> User | None:
@@ -52,3 +55,10 @@ class UserService:
         entity.update(user)
         self._session.commit()
         return entity.to_model()
+    
+    def delete(self, id: int):
+        '''Function to delete a user from database'''
+        entity = self._session.get(UserEntity, id)
+        if (entity):
+            self._session.delete(entity)
+        self._session.commit()

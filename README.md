@@ -1,11 +1,20 @@
 # comp-523-dreamscape
-<<<<<<< HEAD
-## To run React
-* `cd dreamscape-react`
+## Back-end
+### Set-up
+In your terminal
+* Make sure you have the latest Python installed
+* Reset the database: `python3 -m backend.script.reset_database`
+* Run backend: `uvicorn backend.main:app --reload`
+
+## Front-end
+### To run React.js Admin app
+In your terminal
+* `cd dreamscape-admin`
+* `npm install`
 * `npm start`
 
-## To run React Native
-* `cd dreamscape-react-native`
-* `npm run web`
-=======
->>>>>>> f16d8a1cbb49efb2f9c973e8feae4f15008f5934
+### To run React Native Caregiver app
+In your terminal
+* `cd dreamscape-caregiver`
+* `npm install`
+* `npm run ios` or `npm run android`, depending on whether you have Xcode or Android Studio.
