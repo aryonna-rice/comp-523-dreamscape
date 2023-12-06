@@ -79,9 +79,9 @@ if __name__ == '__main__':
     patient_id = args.patient_id
     eeg_signals_path = args.eeg_signals_path
     
-    # argumnent: python3 code/generate_images.py --dataset EEG --patient_id 0 --eeg_signals_path gs://patient-eeg-signals/0/05-12-2023-20-31-20.pth
+    # argumnent: python3 code/generate_images.py --dataset EEG --patient_id 0 --eeg_signals_path gs://patient-eeg-signals/0/06-12-2023-13-05-38.pth
     print(f"Current working directory: {os.getcwd()}")
-    print(f"Provided model path: {args.model_path}")
+    #print(f"Provided model path: {args.model_path}")
 
     # Define the GCS path based on patient_id and datetime
     datetime_str = datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")

@@ -311,6 +311,8 @@ class EEGDataset(Dataset):
     def __init__(self, eeg_signals_path, image_transform=identity, subject = 4):
         # Load EEG signals
         loaded = torch.load(eeg_signals_path)
+        print("Loaded Dataset Shape:", loaded['dataset'].shape)
+
         # if opt.subject!=0:
         #     self.data = [loaded['dataset'][i] for i in range(len(loaded['dataset']) ) if loaded['dataset'][i]['subject']==opt.subject]
         # else:

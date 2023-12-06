@@ -1,10 +1,10 @@
 import numpy as np
 import torch
-from util import instantiate_from_config
+from dc_ldm.util import instantiate_from_config
 from omegaconf import OmegaConf
 import torch.nn as nn
 import os
-from .models.diffusion.plms import PLMSSampler
+from dc_ldm.models.diffusion.plms import PLMSSampler
 from einops import rearrange, repeat
 from torchvision.utils import make_grid
 from torch.utils.data import DataLoader
