@@ -12,9 +12,8 @@ import io
 PATIENT_CSV_DATA_BUCKET = "patient-csv-data"
 PATIENT_EEG_SIGNALS_BUCKET = "patient-eeg-signals"
 ROOT_PATH = '../dreamdiffusion/'
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "../dreamdiffusion/keys/poetic-emblem-404623-5bc4d593eab4.json"
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "../dreamdiffusion/keys/poetic-emblem-404623-0ab6687fe0ea.json"
 
+KEY = "/nas/longleaf/home/aryonna/Dreamscape/comp-523-dreamscape/dreamdiffusion/keys/poetic-emblem-404623-f8d179cff968.json"
 def drop_irrelevants(eeg_data: pd.DataFrame) -> pd.DataFrame:
     """Drop rows with NaN values in EEG columns and columns that are not EEG related."""
     relevant_eeg_data = eeg_data.dropna(subset=['Delta_TP9', 'Delta_AF7', 'Delta_AF8', 'Delta_TP10',
@@ -43,17 +42,17 @@ def save_tensor_to_gcs(eeg_tensors, remote_file_path: str) -> str:
     # Save the tensor to a temporary file locally
     local_temp_file = tempfile.NamedTemporaryFile(delete=False)
     torch.save(eeg_tensors, local_temp_file.name)
-    storage_client = storage.Client()
+    storage_client = storage.Client.from_service_account_json(KEY)
     bucket = storage_client.get_bucket(PATIENT_EEG_SIGNALS_BUCKET)
     blob = bucket.blob(remote_file_path)
-    blob.upload_from_file(local_temp_file.name)
+    blob.upload_from_file(local_temp_file)
     os.remove(local_temp_file.name)
     gcs_path = f"gs://{PATIENT_EEG_SIGNALS_BUCKET}/{remote_file_path}"
     return gcs_path
 
 
 def read_csv_from_gcs(file_path) -> str:
-    storage_client = storage.Client()
+    storage_client = storage.Client.from_service_account_json(KEY)
     bucket = storage_client.get_bucket(PATIENT_CSV_DATA_BUCKET)
     blob = bucket.blob(file_path)
     # Download the contents of the blob (file)
@@ -62,7 +61,7 @@ def read_csv_from_gcs(file_path) -> str:
 
 def get_remote_file_path(patient_id: int) -> str:
     timestamp = datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
-    output_path = os.path.join("datasets", "csv_data", str(patient_id), f"{timestamp}.pth")
+    output_path = os.path.join(str(patient_id), f"{timestamp}.pth")
     return output_path
 
 def clean_data(csv_file_path: str, patient_id: int) -> str:
