@@ -10,7 +10,7 @@ from torchvision.utils import make_grid
 from torch.utils.data import DataLoader
 import torch.nn.functional as F
 from ..sc_mbm.mae_for_eeg import eeg_encoder, classify_network, mapping 
-from generate_images import get_local_file_path, delete_local_path
+from ..gcs_utils import *
 from PIL import Image
 
 def create_model_from_config(config, num_voxels, global_pool):

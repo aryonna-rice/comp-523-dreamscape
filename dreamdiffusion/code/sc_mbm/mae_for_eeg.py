@@ -1,7 +1,7 @@
 import sys
 sys.path.append('../dreamdiffusion/code/')
 # print(sys.path)
-import sc_mbm.utils as ut
+from . import utils as ut
 import torch
 import torch.nn as nn
 import numpy as np

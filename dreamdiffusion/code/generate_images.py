@@ -1,20 +1,28 @@
-from dataset import *
+from .dataset import *
 import os, sys
 import numpy as np
 import torch
 from einops import rearrange
 from PIL import Image
 import torchvision.transforms as transforms
-from .config import *
+#from .config import *
 import wandb
 import datetime
 from .dc_ldm.ldm_for_eeg import eLDM
 import tempfile
 from google.cloud import storage
+from .gcs_utils import *
+from .config import Config_Generative_Model
 
 PATIENT_IMAGE_BUCKET = "patient-eeg-images"
+PATIENT_EEG_SIGNALS_BUCKET = "patient-eeg-signals"
 MODEL_PATH = "gs://eeg-checkpoint-files/pretrains-generation-checkpoint.pth"
 ROOT = "../dreamdiffusion/"
+KEY = "/nas/longleaf/home/aryonna/Dreamscape/comp-523-dreamscape/dreamdiffusion/keys/poetic-emblem-404623-f8d179cff968.json"
+
+# Assuming generate_images.py is in tests directory
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(project_root)
 
 def to_image(img):
     if img.shape[-1] != 3:
@@ -50,19 +58,6 @@ class random_crop:
         if torch.rand(1) < self.p:
             return transforms.RandomCrop(size=(self.size, self.size))(img)
         return img
-    
-def get_local_file_path(gcs_path: str) -> str:
-    _, bucket_name, object_name = gcs_path.split('/', 2)
-    local_temp_file = tempfile.NamedTemporaryFile(delete=False)
-    local_temp_file_path = local_temp_file.name
-    client = storage.Client()
-    bucket = client.bucket(bucket_name)
-    blob = bucket.blob(object_name)
-    blob.download_to_filename(local_temp_file_path)
-    return local_temp_file_path
-
-def delete_local_path(local_path: str) -> None:
-    os.remove(local_path)
 
  
 def generate_image(patient_id: int, eeg_signals_path: str):
@@ -129,7 +124,7 @@ def generate_image(patient_id: int, eeg_signals_path: str):
         img.save(local_image_file_path)
 
         # Upload the local image file to GCS
-        client = storage.Client()
+        client = storage.Client.from_service_account_json(KEY)
         blob_name = f"sample_{i}.png"  # Adjust the blob name as needed
         blob = client.bucket(PATIENT_IMAGE_BUCKET).blob(f"{patient_id}/{datetime_str}/{blob_name}")
         blob.upload_from_filename(local_image_file_path)

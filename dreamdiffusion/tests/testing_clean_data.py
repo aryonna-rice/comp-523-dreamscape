@@ -11,4 +11,5 @@ from dreamdiffusion.code.clean_data import *
 # torch.save(eeg_tensors, "../comp-523-dreamscape/dreamdiffusion/data/gavry_signals.pth")
 
 result = clean_data("0/muse_eeg_export.csv", 0)
+print(result)
 # Works with both GCS and local version.
