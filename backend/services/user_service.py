@@ -55,3 +55,10 @@ class UserService:
         entity.update(user)
         self._session.commit()
         return entity.to_model()
+    
+    def delete(self, id: int):
+        '''Function to delete a user from database'''
+        entity = self._session.get(UserEntity, id)
+        if (entity):
+            self._session.delete(entity)
+        self._session.commit()
