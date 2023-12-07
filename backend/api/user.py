@@ -1,6 +1,6 @@
 '''API methods for adding, removing, and editing users in the database'''
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from ..services import UserService
 from ..models import User
 
@@ -21,8 +21,16 @@ def search(first_name: str | None = None, last_name: str | None = None, user_svc
 
 @api.post("", response_model=User | None, tags=['User'])
 def register(user: User, user_svc: UserService = Depends()):
-    return user_svc.add(user)
+    try:
+        return user_svc.add(user)
+    except ValueError:
+        raise HTTPException(status_code=422, detail="Either the first or last name was empty.")
+
 
 @api.put("", response_model=User | None, tags=['User'])
 def update(user: User, user_svc: UserService = Depends()):
     return user_svc.update(user)
+
+@api.delete("", tags=['User'])
+def delete(id: int, user_svc: UserService = Depends()):
+    user_svc.delete(id)

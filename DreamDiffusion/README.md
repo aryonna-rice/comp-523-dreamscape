@@ -81,6 +81,9 @@ We also checkpoints to run the finetuing and decoding directly.
 
 
 ## Pre-training on EEG data
+
+You can download the dataset for pretraining from here [MOABB](https://github.com/NeuroTechX/moabb).
+
 To perform the pre-training from scratch with defaults parameters, run 
 ```sh
 python3 code/stageA1_eeg_pretrain.py
@@ -109,9 +112,9 @@ python3 code/eeg_ldm.py --dataset EEG  --num_epoch 300 --batch_size 4 --pretrain
 
 
 ## Generating Images with Trained Checkpoints
-Run this stage with our provided checkpoints:
+Run this stage with our provided checkpoints: Here we provide a checkpoint [ckpt](https://drive.google.com/file/d/1Ygplxe1TB68-aYu082bjc89nD8Ngklnc/view?usp=drive_link), which you may want to try.
 ```sh
-python3 code/gen_eval_eeg.py --dataset EEG --model_path  pretrains/generation/checkpoint_best.pth
+python3 code/gen_eval_eeg.py --dataset EEG --model_path  pretrains/generation/checkpoint.pth
 ```
 
 
