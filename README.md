@@ -3,6 +3,7 @@
 ### Set-up
 In your terminal
 * Make sure you have the latest Python installed
+* Install the required modules: `pip3 install -r backend/requirements.txt`
 * Reset the database: `python3 -m backend.script.reset_database`
 * Run backend: `uvicorn backend.main:app --reload`
 
