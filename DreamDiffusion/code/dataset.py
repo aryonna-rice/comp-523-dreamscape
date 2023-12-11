@@ -106,12 +106,14 @@ def is_npy_ext(fname: Union[str, Path]) -> bool:
     return f'{ext}' == 'npy'# type: ignore
 
 class eeg_pretrain_dataset(Dataset):
-    def __init__(self, path='../dreamdiffusion/datasets/mne_data/', roi='VC', patch_size=16, transform=identity, aug_times=2, 
+    def __init__(self, path='..n/datasets/mne_data/', roi='VC', patch_size=16, transform=identity, aug_times=2, 
                 num_sub_limit=None, include_kam=False, include_hcp=True):
         super(eeg_pretrain_dataset, self).__init__()
         data = []
         images = []
         self.input_paths = [str(f) for f in sorted(Path(path).rglob('*')) if is_npy_ext(f) and os.path.isfile(f)]
+        #self.input_paths = [str(f) for f in sorted(Path(path).rglob('*')) if f.suffix == '.pth' and os.path.isfile(f)]
+        print("Input Paths:", self.input_paths)  # Add this line to print the paths
 
         assert len(self.input_paths) != 0, 'No data found'
         self.data_len  = 512
@@ -123,7 +125,10 @@ class eeg_pretrain_dataset(Dataset):
     def __getitem__(self, index):
         data_path = self.input_paths[index]
 
+        #data = np.load(data_path)
+        
         data = np.load(data_path, allow_pickle=True)
+        print(data)
 
         if data.shape[-1] > self.data_len:
             idx = np.random.randint(0, int(data.shape[-1] - self.data_len)+1)
@@ -240,7 +245,7 @@ class EEGDataset_r(Dataset):
     # Constructor
     def __init__(self, eeg_signals_path, image_transform=identity):
 
-        self.imagenet = '/apdcephfs/share_1290939/0_public_datasets/imageNet_2012/train/'
+        self.imagenet = '../dreamdiffusion/datasets/imageNet_images/imageNet_images/'
         self.image_transform = image_transform
         self.num_voxels = 440
         self.data_len = 512
@@ -276,7 +281,7 @@ class EEGDataset_s(Dataset):
         self.data = loaded['dataset']        
         self.labels = loaded["labels"]
         self.images = loaded["images"]
-        self.imagenet = '/apdcephfs/share_1290939/0_public_datasets/imageNet_2012/train/'
+        self.imagenet = '../dreamdiffusion/datasets/imageNet_images/imageNet_images/'
         self.image_transform = image_transform
         self.num_voxels = 440
         # Compute size
@@ -316,7 +321,7 @@ class EEGDataset(Dataset):
             self.data = loaded['dataset']        
         self.labels = loaded["labels"]
         self.images = loaded["images"]
-        self.imagenet = '/apdcephfs/share_1290939/0_public_datasets/imageNet_2012/train/'
+        self.imagenet = '../dreamdiffusion/datasets/imageNet_images/imageNet_images/'
         self.image_transform = image_transform
         self.num_voxels = 440
         self.data_len = 512
@@ -441,4 +446,3 @@ if __name__ == '__main__':
     import scipy.io as scio
     import copy
     import shutil
-

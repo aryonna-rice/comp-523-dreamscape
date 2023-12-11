@@ -64,17 +64,24 @@ if __name__ == '__main__':
     root = args.root
     target = args.dataset
 
+    print(f"Current working directory: {os.getcwd()}")
+    print(f"Provided model path: {args.model_path}")
+
     sd = torch.load(args.model_path, map_location='cpu')
     config = sd['config']
     # update paths
     config.root_path = root
-    config.pretrain_mbm_path = '../dreamdiffusion/results/eeg_pretrain/19-02-2023-08-48-17/checkpoints/checkpoint.pth'
+    config.eeg_signals_path = os.path.join(config.root_path, 'datasets/eeg_5_95_std.pth')
+    config.pretrain_mbm_path = '../dreamdiffusion/results/eeg_pretrain/28-11-2023-21-07-25/checkpoints/checkpoint.pth'
     config.pretrain_gm_path = '../dreamdiffusion/pretrains/'
+
+    print("Updated config:")
     print(config.__dict__)
 
     output_path = os.path.join(config.root_path, 'results', 'eval',  
                     '%s'%(datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S")))
     
+    print(f"Generated output path: {output_path}")
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     crop_pix = int(config.crop_ratio*config.img_size)
@@ -91,7 +98,7 @@ if __name__ == '__main__':
     ])
 
     
-    splits_path = "../dreamdiffusion/datasets/block_splits_by_image_single.pth"
+    splits_path = splits_path = "../dreamdiffusion/datasets/block_splits_by_image_single.pth"
     dataset_train, dataset_test = create_EEG_dataset(eeg_signals_path = config.eeg_signals_path, splits_path = splits_path, 
                 image_transform=[img_transform_train, img_transform_test], subject = 4)
     num_voxels = dataset_test.dataset.data_len
