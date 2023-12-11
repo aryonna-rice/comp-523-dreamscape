@@ -1,16 +1,19 @@
-
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import '../App.css';
 import { TextField } from '@mui/material';
 import Stack from '@mui/material/Stack';
+import { Alert } from '@mui/material';  
+
 
 const Register = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [dob, setDOB] = useState('');
     const [gender, setGender] = useState('');
+    const [alert, setAlert] = useState(null);
+
     const formatDOB = (input) => {
         if (input.length <= 10) {
           // Remove any non-numeric characters
@@ -49,12 +52,12 @@ const Register = () => {
         .then(response => {
           // Handle success (e.g., show a success message, navigate to a new screen)
           console.log('Patient registered:', response.data);
-          alert('Patient registered successfully! Device ID:' + response.data.device_id)
           window.location.reload();
+          setAlert({ severity: 'success', message: 'Patient registered successfully! Device ID:' + response.data.device_id });
         })
         .catch(error => {
           // Handle error (e.g., show an error message)
-          alert('Error registering patient. Please try again.');
+          setAlert({ severity: 'warning', message: 'Error creating patient. Please try again.' });
           if (error.response) {
             // The request was made and the server responded with a status code
             // that falls out of the range of 2xx
@@ -72,9 +75,19 @@ const Register = () => {
           console.error('Full error object:', error);
         });
       };
+
+      const handleCloseAlert = () => {
+        setAlert(null);
+      };
+
     return (
         <form className= "form">
         <Stack spacing={1} sx={{ width: 300 }}>
+        {alert && (
+          <Alert severity={alert.severity} onClose={handleCloseAlert}>
+            {alert.message}
+          </Alert>
+        )}
         <h2 className="header2">Register a Patient</h2>
         <TextField 
             color='primary'

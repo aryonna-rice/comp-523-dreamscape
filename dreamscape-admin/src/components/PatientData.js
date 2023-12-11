@@ -5,46 +5,38 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from 'material-react-table';
+import Search from './Search';
 
-const PatientData = () => {
-    const [allData, setAllData] = useState([]);
-    
-      
+const PatientData = ({patientData}) => {
       const columns = useMemo(
         () => [
           {
-            accessorKey: 'id', //access nested data with dot notation
-            header: 'Date',
+            accessorKey: 'TimeStamp', //access nested data with dot notation
+            header: 'Timestamp',
             size: 10,
           },
           {
-            accessorKey: 'device_id', //access nested data with dot notation
-            header: 'Time',
-            size: 3,
-          },
-          {
-            accessorKey: 'first_name', //access nested data with dot notation
-            header: 'Gamma',
-            size: 20,
-          },
-          {
-            accessorKey: 'last_name', //access nested data with dot notation
-            header: 'Alpha',
-            size: 20,
-          },
-          {
-            accessorKey: 'dob', //access nested data with dot notation
-            header: 'Theta',
+            accessorKey: 'Theta_TP9', //access nested data with dot notation
+            header: 'Theta_TP9',
             size: 10,
           },
-
+          {
+            accessorKey: 'Theta_AF7', //access nested data with dot notation
+            header: 'Theta_AF7',
+            size: 10,
+          },
+          {
+            accessorKey: 'Theta_TP10', //access nested data with dot notation
+            header: 'Theta_TP10',
+            size: 10,
+          },
         ],
         [],
       );
     
       const table = useMaterialReactTable({
         columns,
-        data: allData,
+        data: patientData,
         muiTableHeadCellProps: {
           style: {
             backgroundColor: '#6373ff',
@@ -62,7 +54,6 @@ const PatientData = () => {
     return(
         <>
         <Stack>
-            <h3>WILL BE PATIENT DATA</h3>
             <MaterialReactTable table={table} />
         </Stack>
         </>
